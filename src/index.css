@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+/* 프리텐다드 폰트 */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
+
+/* 마포애민 폰트 */
+@font-face {
+    font-family: "MapoAgape";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoAgapeA.woff")
+        format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@theme {
+    --font-pretendard: "Pretendard", sans-serif;
+    --font-mapo: "MapoAgape", sans-serif;
+    --color-main: #4e3f34;
+}
+
+body {
+    font-family: var(--font-pretendard); /* 프리텐다드 기본 폰트로 설정 */
+}
