@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Home() {
+    const navigate = useNavigate();
+
     return (
         <div className="min-h-screen bg-[#FFFDF7] flex flex-col items-center justify-center">
             {/* 로고 아이콘 */}
@@ -15,10 +19,13 @@ export default function Home() {
             </p>
 
             {/* 버튼 */}
-            <button className="w-full max-w-[240px] h-7 bg-main text-white rounded-full text-[12px] font-light mb-2 shadow-sm hover:brightness-130 transition">
+            <button
+                onClick={() => navigate("/write")}
+                className="w-full max-w-[280px] h-8 bg-main text-white rounded-full text-[12px] mb-2 shadow-sm hover:brightness-130 transition"
+            >
                 편지 쓰기
             </button>
-            <button className="w-full max-w-[240px] h-7 border border-main rounded-full text-[12px] font-light flex items-center justify-center gap-3 bg-white shadow-sm hover:bg-neutral-100 transition">
+            <button className="w-full max-w-[280px] h-8 border border-main rounded-full text-[12px] flex items-center justify-center gap-3 bg-white shadow-sm hover:bg-neutral-100 transition">
                 <img src="icons/google.svg" alt="Google" className="w-3 h-3" />
                 Google 계정으로 로그인
             </button>
