@@ -77,7 +77,8 @@ export default function LetterWrite() {
                 {/* 제출 버튼 */}
                 <button
                     type="submit"
-                    className="mt-6 w-full py-2 rounded-full bg-main text-white text-sm shadow-sm hover:brightness-105 transition"
+                    onClick={() => navigate("/list")}
+                    className="mt-6 w-full py-2 rounded-full bg-main text-white text-sm shadow-sm hover:brightness-130 transition"
                 >
                     편지 보내기
                 </button>

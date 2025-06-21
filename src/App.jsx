@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import LetterWrite from "./pages/LetterWrite";
+import LetterList from "./pages/LetterList";
 
 function App() {
     return (
@@ -9,6 +10,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/write" element={<LetterWrite />} />
+                    <Route path="/list" element={<LetterList />} />
                 </Routes>
             </div>
         </div>
