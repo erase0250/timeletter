@@ -1,7 +1,8 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import LetterWrite from "./pages/LetterWrite";
 import LetterList from "./pages/LetterList";
+import LetterLocked from "./pages/LetterLocked";
 
 function App() {
     return (
@@ -11,6 +12,8 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/write" element={<LetterWrite />} />
                     <Route path="/list" element={<LetterList />} />
+                    {/* ⬇️ 테스트 */}
+                    <Route path="/locked" element={<LetterLocked />} />
                 </Routes>
             </div>
         </div>
