@@ -3,6 +3,8 @@ import Home from "./pages/Home";
 import LetterWrite from "./pages/LetterWrite";
 import LetterList from "./pages/LetterList";
 import LetterLocked from "./pages/LetterLocked";
+import LetterDetail from "./pages/LetterDetail";
+import "./App.css";
 
 function App() {
     return (
@@ -12,6 +14,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/write" element={<LetterWrite />} />
                     <Route path="/list" element={<LetterList />} />
+                    <Route path="/letter/:id" element={<LetterDetail />} />
                     {/* ⬇️ 테스트 */}
                     <Route path="/locked" element={<LetterLocked />} />
                 </Routes>
