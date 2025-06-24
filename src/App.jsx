@@ -15,8 +15,7 @@ function App() {
                     <Route path="/write" element={<LetterWrite />} />
                     <Route path="/list" element={<LetterList />} />
                     <Route path="/letter/:id" element={<LetterDetail />} />
-                    {/* ⬇️ 테스트 */}
-                    <Route path="/locked" element={<LetterLocked />} />
+                    <Route path="/locked/:id" element={<LetterLocked />} />
                 </Routes>
             </div>
         </div>

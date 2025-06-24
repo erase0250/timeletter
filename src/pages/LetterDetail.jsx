@@ -1,13 +1,28 @@
 import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
-import dummyLetters from "../data/dummyLetters";
+import { useEffect, useState } from "react";
 
 export default function LetterDetail() {
     const { id } = useParams();
+    const [letter, setLetter] = useState(null);
 
-    // 더미데이터용
-    const letter = dummyLetters.find((letter) => letter.id === Number(id));
+    useEffect(() => {
+        const stored = JSON.parse(localStorage.getItem("letters")) || [];
+        const found = stored.find((l) => l.id === Number(id));
+        setLetter(found);
+    }, [id]);
+
+    if (!letter) {
+        return (
+            <Layout>
+                <Header type="default" title="편지 상세" />
+                <div className="p-6 text-center text-gray-500">
+                    편지를 찾을 수 없습니다.
+                </div>
+            </Layout>
+        );
+    }
 
     return (
         <Layout>

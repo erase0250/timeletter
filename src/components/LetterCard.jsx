@@ -10,9 +10,18 @@ export default function LetterCard({
 }) {
     const navigate = useNavigate();
 
+    // 클릭 시 편지 상태에 따라 상세페이지 또는 잠금페이지로 이동
+    const handleClick = () => {
+        if (isLock) {
+            navigate(`/locked/${id}`);
+        } else {
+            navigate(`/letter/${id}`);
+        }
+    };
+
     return (
         <div
-            onClick={() => navigate(`/letter/${id}`)}
+            onClick={handleClick}
             className="bg-white border border-[#eee5da] rounded-md p-3 shadow-sm cursor-pointer"
         >
             <h2 className="text-main font-semibold mb-1 truncate">{title}</h2>
