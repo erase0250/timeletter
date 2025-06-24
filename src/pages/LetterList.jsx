@@ -2,14 +2,22 @@ import LetterCard from "../components/LetterCard";
 import LetterTab from "../components/LetterTab";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
-import dummyLetters from "../data/dummyLetters";
-import { useState } from "react";
+// import dummyLetters from "../data/dummyLetters";
+import { useEffect, useState } from "react";
+import AddLetterButton from "../components/AddLetterButton";
 
 export default function LetterList() {
     const [activeTab, setActiveTab] = useState("전체");
+    const [letters, setLetters] = useState([]);
+
+    // 로컬스토리지에서 편지 불러오기
+    useEffect(() => {
+        const stored = JSON.parse(localStorage.getItem("letters")) || [];
+        setLetters(stored);
+    }, []);
 
     // 선택된 탭에 따라 해당 편지 필터링
-    const filteredLetters = dummyLetters.filter((letter) => {
+    const filteredLetters = letters.filter((letter) => {
         if (activeTab === "전체") return true;
         if (activeTab === "열람가능") return !letter.isLock;
         if (activeTab === "잠금 중") return letter.isLock;
@@ -42,9 +50,11 @@ export default function LetterList() {
                     />
                 ))}
             </ul>
+
             <div className="flex justify-center mb-10">
                 <img src="./icons/logo.svg" className="w-12 h-12 opacity-30" />
             </div>
+            <AddLetterButton />
         </Layout>
     );
 }
