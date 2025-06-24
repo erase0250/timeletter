@@ -2,36 +2,49 @@ import LetterCard from "../components/LetterCard";
 import LetterTab from "../components/LetterTab";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
+import dummyLetters from "../data/dummyLetters";
+import { useState } from "react";
 
 export default function LetterList() {
+    const [activeTab, setActiveTab] = useState("전체");
+
+    // 선택된 탭에 따라 해당 편지 필터링
+    const filteredLetters = dummyLetters.filter((letter) => {
+        if (activeTab === "전체") return true;
+        if (activeTab === "열람가능") return !letter.isLock;
+        if (activeTab === "잠금 중") return letter.isLock;
+    });
+
     return (
         <Layout>
             <Header type="list" />
-            <LetterTab />
-
+            <LetterTab onTabChange={setActiveTab} />
             {/* 편지 개수 텍스트 */}
-            <p className="px-5 text-[12px] text-gray-500 ml-1 mb-2 ">
-                총 <span className="font-semibold text-main">2개</span>의 편지를
-                작성했어요.
+            <p className="px-5 text-[12px] text-gray-500 ml-1 mb-2">
+                총{" "}
+                <span className="font-semibold text-main">
+                    {filteredLetters.length}
+                </span>
+                개의 편지를 작성했어요.
             </p>
 
             {/* 편지 카드 리스트 */}
-            <ul className="px-5 flex flex-col gap-3">
-                <LetterCard
-                    title={"제목제목"}
-                    content={"내용내용내용"}
-                    isLock={true}
-                    createdAt={"2025.05.16"}
-                    openAt={"2025.06.16"}
-                />
-                <LetterCard
-                    title={"제목제목"}
-                    content={"내용내용내용"}
-                    isLock={false}
-                    createdAt={"2025.05.16"}
-                    openAt={"2025.06.16"}
-                />
+            <ul className="px-5 flex flex-col gap-3 mb-10">
+                {filteredLetters.map((letter) => (
+                    <LetterCard
+                        key={letter.id}
+                        id={letter.id}
+                        title={letter.title}
+                        content={letter.content}
+                        isLock={letter.isLock}
+                        createdAt={letter.createdAt}
+                        openAt={letter.openAt}
+                    />
+                ))}
             </ul>
+            <div className="flex justify-center mb-10">
+                <img src="./icons/logo.svg" className="w-12 h-12 opacity-30" />
+            </div>
         </Layout>
     );
 }
