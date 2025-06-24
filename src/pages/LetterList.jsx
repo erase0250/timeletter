@@ -1,21 +1,12 @@
-import { MdNotes } from "react-icons/md";
 import LetterCard from "../components/LetterCard";
 import LetterTab from "../components/LetterTab";
+import Header from "../components/Header";
+import Layout from "../components/Layout";
 
 export default function LetterList() {
     return (
-        <div className="min-h-screen bg-[#FFFDF7]">
-            {/* 헤더 -> 컴포넌트로 */}
-            <div className="h-14 relative flex items-center px-5 mb-5 bg-white border-b border-gray-200">
-                <div className="cursor-pointer">
-                    <MdNotes className="w-6 h-6 text-main" />
-                </div>
-                <h2 className="font-mapo absolute left-1/2 -translate-x-1/2 text-xl font-semibold text-main">
-                    Timeletter
-                </h2>
-            </div>
-
-            {/* 탭 */}
+        <Layout>
+            <Header type="list" />
             <LetterTab />
 
             {/* 편지 개수 텍스트 */}
@@ -41,6 +32,6 @@ export default function LetterList() {
                     openAt={"2025.06.16"}
                 />
             </ul>
-        </div>
+        </Layout>
     );
 }

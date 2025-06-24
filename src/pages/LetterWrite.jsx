@@ -1,21 +1,13 @@
-import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import Layout from "../components/Layout";
 
 export default function LetterWrite() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-[#FFFDF7] ">
-            {/* 헤더 */}
-            <div className="h-14 relative flex items-center px-5 mb-6 bg-white border-b border-gray-200">
-                <div onClick={() => navigate("/")} className="cursor-pointer">
-                    <IoIosArrowBack className="w-6 h-6 text-main" />
-                </div>
-
-                <h2 className="absolute left-1/2 -translate-x-1/2 text-base font-semibold text-main">
-                    새 편지 쓰기
-                </h2>
-            </div>
+        <Layout>
+            <Header type="default" title="새 편지 쓰기" />
 
             {/* 폼 영역 */}
             <form className="flex flex-col gap-8 text-main px-5 pb-10">
@@ -83,6 +75,6 @@ export default function LetterWrite() {
                     편지 보내기
                 </button>
             </form>
-        </div>
+        </Layout>
     );
 }
