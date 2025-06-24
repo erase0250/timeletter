@@ -1,12 +1,20 @@
+import { useNavigate } from "react-router-dom";
+
 export default function LetterCard({
+    id,
     title,
     content,
     isLock,
     createdAt, // 작성일
     openAt, // 열람 예정일
 }) {
+    const navigate = useNavigate();
+
     return (
-        <div className="bg-white border border-[#eee5da] rounded-md p-3 shadow-sm">
+        <div
+            onClick={() => navigate(`/letter/${id}`)}
+            className="bg-white border border-[#eee5da] rounded-md p-3 shadow-sm cursor-pointer"
+        >
             <h2 className="text-main font-semibold mb-1 truncate">{title}</h2>
 
             <p className="text-gray-500 text-xs line-clamp-2 mb-3">{content}</p>
