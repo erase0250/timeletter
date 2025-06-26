@@ -50,11 +50,6 @@ export default function LetterDetail() {
             {/* 편지 본문 */}
             <div className="flex-1 px-6 pt-3 pb-6">
                 <div className="rounded-md shadow-sm border border-[#eee5da] p-4 bg-white">
-                    {/* 작성일 */}
-                    <p className="text-xs text-gray-400 mb-1">
-                        {letter.createdAt} 작성
-                    </p>
-
                     {/* 제목 */}
                     <h1 className="text-main text-xl font-bold mb-4">
                         {letter.title}
@@ -65,17 +60,22 @@ export default function LetterDetail() {
                         className="text-[14px] text-gray-700 leading-[22px] whitespace-pre-wrap rounded-md px-1 pb-5"
                         style={{
                             backgroundImage: `repeating-linear-gradient(
-                                to bottom,
-                                transparent 0px,
-                                transparent 21px,
-                                rgba(0, 0, 0, 0.08) 22px
-                            )`,
+                    to bottom,
+                    transparent 0px,
+                    transparent 21px,
+                    rgba(0, 0, 0, 0.2) 22px
+                )`,
                             backgroundPosition: "0 22px", // 밑줄 위치
                             backgroundSize: "100% 22px",
                         }}
                     >
                         {letter.content}
                     </div>
+
+                    {/* 작성일 */}
+                    <p className="text-xs text-gray-400 text-right mt-2">
+                        {letter.createdAt} 작성
+                    </p>
                 </div>
             </div>
 
