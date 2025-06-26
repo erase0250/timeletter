@@ -38,7 +38,7 @@ export default function LetterWrite() {
         // 새로운 편지 맨 앞에 추가 후 저장
         localStorage.setItem("letters", JSON.stringify([newLetter, ...stored]));
 
-        navigate("/list");
+        navigate("/send");
     };
 
     return (

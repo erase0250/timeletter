@@ -5,6 +5,7 @@ import LetterList from "./pages/LetterList";
 import LetterLocked from "./pages/LetterLocked";
 import LetterDetail from "./pages/LetterDetail";
 import LetterEdit from "./pages/LetterEdit";
+import LetterSendAnimation from "./components/LetterSendAnimation";
 import "./App.css";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
                     <Route path="/letter/:id" element={<LetterDetail />} />
                     <Route path="/locked/:id" element={<LetterLocked />} />
                     <Route path="/edit/:id" element={<LetterEdit />} />
+                    <Route path="/send" element={<LetterSendAnimation />} />
                 </Routes>
             </div>
         </div>
