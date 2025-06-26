@@ -24,3 +24,23 @@
 .react-datepicker__current-month {
     color: #40342d; /* 텍스트 컬러 */
 }
+
+/* LetterSendAnimation */
+@keyframes flyUp {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-100px) scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-300px) scale(0.8);
+        opacity: 0;
+    }
+}
+
+.animate-fly-up {
+    animation: flyUp 2s ease-in-out forwards;
+}
