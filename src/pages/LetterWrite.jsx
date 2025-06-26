@@ -3,23 +3,33 @@ import Header from "../components/Header";
 import Layout from "../components/Layout";
 import { useState } from "react";
 import LetterForm from "../components/LetterForm";
+import { format } from "date-fns";
 
 export default function LetterWrite() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [openDate, setOpenDate] = useState("");
+    const [openDate, setOpenDate] = useState(null);
     const navigate = useNavigate();
+
+    // 열람일 변경 핸들러
+    const handleOpenDateChange = (date) => {
+        setOpenDate(date);
+    };
 
     // 편지 작성 핸들러
     const handleSubmit = (e) => {
         e.preventDefault(); // -> 폼의 기본 제출 동작인 '새로고침, 서버 전송' 막음
 
+        // 날짜 포맷
+        const createdAt = format(new Date(), "yyyy-MM-dd");
+        const openAt = format(openDate, "yyyy-MM-dd");
+
         const newLetter = {
             id: Date.now(), // 편지 아이디: 현재 시간을 ms단위 숫자로 반환한 걸 사용
             title, // 제목
             content, // 내용
-            createdAt: new Date().toISOString().slice(0, 10), // 편지 작성일: yyyy-mm-dd 형식
-            openAt: openDate, // 편지 열람일
+            createdAt, // 편지 작성일
+            openAt, // 편지 열람일
             isLock: new Date(openDate) > new Date(), // 편지 잠금: 열람일이 오늘보다 미래면 잠금 상태 처리
         };
 
@@ -40,7 +50,7 @@ export default function LetterWrite() {
                 openDate={openDate}
                 onChangeTitle={(e) => setTitle(e.target.value)}
                 onChangeContent={(e) => setContent(e.target.value)}
-                onChangeOpenDate={(e) => setOpenDate(e.target.value)}
+                onChangeOpenDate={handleOpenDateChange}
                 onSubmit={handleSubmit}
                 buttonText="편지 보내기"
             />
