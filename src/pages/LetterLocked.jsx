@@ -2,16 +2,42 @@ import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
+import useUserStore from "../stores/userStore";
+import useLetterStore from "../stores/letterStore";
+import {
+    getLettersFromFirestore,
+    unlockLetterInFirestore,
+} from "../api/firestore";
 
 export default function LetterLocked() {
     const { id } = useParams();
     const [letter, setLetter] = useState(null);
     const [remainingDays, setRemainingDays] = useState(null);
     const navigate = useNavigate();
+    const { user } = useUserStore();
+    const { letters, setLetters } = useLetterStore();
 
     useEffect(() => {
-        const stored = JSON.parse(localStorage.getItem("letters")) || [];
-        const found = stored.find((item) => item.id === Number(id));
+        const loadIfNeeded = async () => {
+            if (user && letters.length === 0) {
+                const fetched = await getLettersFromFirestore(user.uid);
+                setLetters(fetched);
+            }
+        };
+        loadIfNeeded();
+    }, [user, letters.length, setLetters]);
+
+    useEffect(() => {
+        let found;
+
+        if (user) {
+            // 로그인 상태 -> zustand에서 불러옴
+            found = letters.find((item) => String(item.id) === id);
+        } else {
+            // 비로그인 상태 -> 로컬스토리지에서 불러옴
+            const stored = JSON.parse(localStorage.getItem("letters")) || [];
+            found = stored.find((item) => item.id === Number(id));
+        }
 
         if (!found) return;
 
@@ -32,17 +58,34 @@ export default function LetterLocked() {
         setRemainingDays(daysLeft);
 
         setLetter(found);
-    }, [id, navigate]);
+    }, [id, navigate, user, letters]);
 
     if (!letter) return null;
 
     // 미리보기 핸들러
-    const handlePreview = () => {
-        const stored = JSON.parse(localStorage.getItem("letters")) || [];
-        const updated = stored.map((item) =>
-            item.id === Number(id) ? { ...item, isLock: false } : item
-        );
-        localStorage.setItem("letters", JSON.stringify(updated));
+    const handlePreview = async () => {
+        if (user) {
+            // 로그인 상태 -> zustand에서 편지 상태 변경
+            try {
+                await unlockLetterInFirestore(user.uid, id); // Firestore에서 잠금 해제
+
+                const updated = letters.map((item) =>
+                    String(item.id) === id ? { ...item, isLock: false } : item
+                );
+                setLetters(updated);
+            } catch (error) {
+                console.log(error);
+                alert("미리보기에 실패했어요. 다시 시도해 주세요.");
+                return;
+            }
+        } else {
+            // 비로그인 상태 -> 로컬스토리지 업데이트
+            const stored = JSON.parse(localStorage.getItem("letters")) || [];
+            const updated = stored.map((item) =>
+                item.id === Number(id) ? { ...item, isLock: false } : item
+            );
+            localStorage.setItem("letters", JSON.stringify(updated));
+        }
 
         // replace 옵션 추가 -> 히스토리에서 잠금페이지 제거
         navigate(`/letter/${id}`, { replace: true });

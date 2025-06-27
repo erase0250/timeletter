@@ -4,14 +4,36 @@ import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { RiDeleteBinLine } from "react-icons/ri";
+import useUserStore from "../stores/userStore";
+import useLetterStore from "../stores/letterStore";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../lib/firebase";
+import { getLettersFromFirestore } from "../api/firestore";
+
+// ❓ 날짜 포맷 안전하게 처리하는 함수
+function safeFormatDate(value) {
+    if (!value) return "";
+
+    if (typeof value === "object" && value.seconds && value.toDate) {
+        return value.toDate().toLocaleDateString();
+    }
+
+    try {
+        return new Date(value).toLocaleDateString();
+    } catch {
+        return "";
+    }
+}
 
 export default function LetterDetail() {
     const { id } = useParams();
     const [letter, setLetter] = useState(null);
     const navigate = useNavigate();
+    const { user } = useUserStore();
+    const { letters, setLetters } = useLetterStore();
 
     // 편지 삭제 핸들러
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (
             !window.confirm(
                 "정말 이 편지를 삭제할까요? 삭제한 편지는 되돌릴 수 없어요."
@@ -19,18 +41,52 @@ export default function LetterDetail() {
         )
             return;
 
-        const stored = JSON.parse(localStorage.getItem("letters")) || [];
-        const updated = stored.filter((item) => item.id !== Number(id));
-        localStorage.setItem("letters", JSON.stringify(updated));
-
-        navigate("/list");
+        if (user) {
+            // Firestore 삭제 처리
+            try {
+                await deleteDoc(doc(db, "users", user.uid, "letters", id));
+                const updated = letters.filter(
+                    (item) => String(item.id) !== id
+                );
+                setLetters(updated);
+                navigate("/list");
+            } catch (error) {
+                console.error("Firestore 삭제 오류:", error);
+                alert("삭제에 실패했어요. 다시 시도해 주세요.");
+            }
+        } else {
+            // 로컬스토리지 삭제 처리
+            const stored = JSON.parse(localStorage.getItem("letters")) || [];
+            const updated = stored.filter((item) => item.id !== Number(id));
+            localStorage.setItem("letters", JSON.stringify(updated));
+            navigate("/list");
+        }
     };
 
     useEffect(() => {
-        const stored = JSON.parse(localStorage.getItem("letters")) || [];
-        const found = stored.find((l) => l.id === Number(id));
+        const loadIfNeeded = async () => {
+            if (user && letters.length === 0) {
+                const fetched = await getLettersFromFirestore(user.uid);
+                setLetters(fetched);
+            }
+        };
+        loadIfNeeded();
+    }, [user, letters.length, setLetters]);
+
+    useEffect(() => {
+        let found;
+
+        if (user) {
+            // 로그인 -> zustand
+            found = letters.find((item) => String(item.id) === id);
+        } else {
+            // 비로그인 -> 로컬스토리지
+            const stored = JSON.parse(localStorage.getItem("letters")) || [];
+            found = stored.find((l) => l.id === Number(id));
+        }
+
         setLetter(found);
-    }, [id]);
+    }, [id, user, letters]);
 
     if (!letter) {
         return (
@@ -60,11 +116,11 @@ export default function LetterDetail() {
                         className="text-[14px] text-gray-700 leading-[22px] whitespace-pre-wrap rounded-md px-1 pb-5"
                         style={{
                             backgroundImage: `repeating-linear-gradient(
-                    to bottom,
-                    transparent 0px,
-                    transparent 21px,
-                    rgba(0, 0, 0, 0.2) 22px
-                )`,
+                                to bottom,
+                                transparent 0px,
+                                transparent 21px,
+                                rgba(0, 0, 0, 0.2) 22px
+                            )`,
                             backgroundPosition: "0 22px", // 밑줄 위치
                             backgroundSize: "100% 22px",
                         }}
@@ -74,7 +130,7 @@ export default function LetterDetail() {
 
                     {/* 작성일 */}
                     <p className="text-xs text-gray-400 text-right mt-2">
-                        {letter.createdAt} 작성
+                        {safeFormatDate(letter.createdAt)} 작성
                     </p>
                 </div>
             </div>
