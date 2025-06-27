@@ -7,8 +7,17 @@ import LetterDetail from "./pages/LetterDetail";
 import LetterEdit from "./pages/LetterEdit";
 import LetterSendAnimation from "./components/LetterSendAnimation";
 import "./App.css";
+import { useEffect } from "react";
+import useUserStore from "./stores/userStore";
 
 function App() {
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            useUserStore.getState().setUser(JSON.parse(storedUser));
+        }
+    }, []);
+
     return (
         <div className="min-h-screen flex justify-center bg-[#F8F1E8]">
             <div className="w-[420px] min-h-screen shadow-lg">

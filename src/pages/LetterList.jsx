@@ -1,22 +1,39 @@
-import LetterCard from "../components/LetterCard";
-import LetterTab from "../components/LetterTab";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
-// import dummyLetters from "../data/dummyLetters";
-import { useEffect, useState } from "react";
+import LetterTab from "../components/LetterTab";
+import LetterCard from "../components/LetterCard";
 import AddLetterButton from "../components/AddLetterButton";
+import Sidebar from "../components/Sidebar";
+import useUserStore from "../stores/userStore";
+import useLetterStore from "../stores/letterStore";
+import { getLettersFromFirestore } from "../api/firestore";
+import ProfileMenu from "../components/ProfileMenu";
 
 export default function LetterList() {
     const [activeTab, setActiveTab] = useState("전체");
-    const [letters, setLetters] = useState([]);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const { user } = useUserStore();
+    const { letters, setLetters, clearLetters } = useLetterStore();
 
-    // 로컬스토리지에서 편지 불러오기
     useEffect(() => {
-        const stored = JSON.parse(localStorage.getItem("letters")) || [];
-        setLetters(stored);
-    }, []);
+        const fetchLetters = async () => {
+            if (user) {
+                const firestoreLetters = await getLettersFromFirestore(
+                    user.uid
+                );
+                setLetters(firestoreLetters);
+            } else {
+                const stored =
+                    JSON.parse(localStorage.getItem("letters")) || [];
+                setLetters(stored);
+            }
+        };
 
-    // 선택된 탭에 따라 해당 편지 필터링
+        fetchLetters();
+        return () => clearLetters();
+    }, [user, setLetters, clearLetters]);
+
     const filteredLetters = letters.filter((letter) => {
         if (activeTab === "전체") return true;
         if (activeTab === "열람가능") return !letter.isLock;
@@ -25,8 +42,19 @@ export default function LetterList() {
 
     return (
         <Layout>
-            <Header type="list" />
+            <div className="relative">
+                <Header
+                    type="list"
+                    onOpenSidebar={() => setIsSidebarOpen(true)}
+                />
+                <ProfileMenu />
+            </div>
+            {isSidebarOpen && (
+                <Sidebar onClose={() => setIsSidebarOpen(false)} />
+            )}
+
             <LetterTab onTabChange={setActiveTab} />
+
             {/* 편지 개수 텍스트 */}
             <p className="px-5 text-[12px] text-gray-500 ml-1 mb-2">
                 총{" "}
