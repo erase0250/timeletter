@@ -2,14 +2,18 @@ import { IoIosArrowBack } from "react-icons/io";
 import { MdNotes } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-export default function Header({ type = "default", title = "" }) {
+export default function Header({
+    type = "default",
+    title = "",
+    onOpenSidebar,
+}) {
     const navigate = useNavigate();
 
     return (
         <div className="h-14 relative flex items-center px-5 bg-white border-b border-gray-200 mb-3">
             {/* LetterList 페이지 헤더 */}
             {type === "list" ? (
-                <div className="cursor-pointer">
+                <div className="cursor-pointer" onClick={onOpenSidebar}>
                     <MdNotes className="w-6 h-6 text-main" />
                 </div>
             ) : (

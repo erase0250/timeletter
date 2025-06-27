@@ -1,5 +1,20 @@
 import { useNavigate } from "react-router-dom";
 
+// ❓ 날짜 포맷 안전하게 처리하는 함수
+function safeFormatDate(value) {
+    if (!value) return "";
+
+    if (typeof value === "object" && value.seconds && value.toDate) {
+        return value.toDate().toLocaleDateString();
+    }
+
+    try {
+        return new Date(value).toLocaleDateString();
+    } catch {
+        return "";
+    }
+}
+
 export default function LetterCard({
     id,
     title,
@@ -45,7 +60,7 @@ export default function LetterCard({
                 </span>
 
                 <span className="text-gray-400 text-xs">
-                    {createdAt} → {openAt}
+                    {safeFormatDate(createdAt)} → {safeFormatDate(openAt)}
                 </span>
             </div>
         </div>

@@ -4,12 +4,15 @@ import Layout from "../components/Layout";
 import { useState } from "react";
 import LetterForm from "../components/LetterForm";
 import { format } from "date-fns";
+import useUserStore from "../stores/userStore";
+import { saveLetterToFirestore } from "../api/firestore";
 
 export default function LetterWrite() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [openDate, setOpenDate] = useState(null);
     const navigate = useNavigate();
+    const { user } = useUserStore();
 
     // 열람일 변경 핸들러
     const handleOpenDateChange = (date) => {
@@ -17,7 +20,7 @@ export default function LetterWrite() {
     };
 
     // 편지 작성 핸들러
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault(); // -> 폼의 기본 제출 동작인 '새로고침, 서버 전송' 막음
 
         // 날짜 포맷
@@ -25,7 +28,6 @@ export default function LetterWrite() {
         const openAt = format(openDate, "yyyy-MM-dd");
 
         const newLetter = {
-            id: Date.now(), // 편지 아이디: 현재 시간을 ms단위 숫자로 반환한 걸 사용
             title, // 제목
             content, // 내용
             createdAt, // 편지 작성일
@@ -33,12 +35,26 @@ export default function LetterWrite() {
             isLock: new Date(openDate) > new Date(), // 편지 잠금: 열람일이 오늘보다 미래면 잠금 상태 처리
         };
 
-        // 로컬스토리지에 저장된 기존 편지 가져오기
-        const stored = JSON.parse(localStorage.getItem("letters")) || [];
-        // 새로운 편지 맨 앞에 추가 후 저장
-        localStorage.setItem("letters", JSON.stringify([newLetter, ...stored]));
+        try {
+            if (user) {
+                // 로그인 -> Firestore에 저장
+                await saveLetterToFirestore(user.uid, newLetter);
+            } else {
+                // 비로그인 -> 로컬스토리지에 저장
+                const stored =
+                    JSON.parse(localStorage.getItem("letters")) || [];
+                const localLetter = { id: Date.now(), ...newLetter };
+                localStorage.setItem(
+                    "letters",
+                    JSON.stringify([localLetter, ...stored])
+                );
+            }
 
-        navigate("/send");
+            navigate("/send");
+        } catch (error) {
+            alert("편지 저장에 실패했어요. 다시 시도해 주세요.");
+            console.error(error);
+        }
     };
 
     return (
