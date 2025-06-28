@@ -6,8 +6,17 @@ export default function Header({
     type = "default",
     title = "",
     onOpenSidebar,
+    backTo = null,
 }) {
     const navigate = useNavigate();
+
+    const handleBack = () => {
+        if (backTo) {
+            navigate(backTo);
+        } else {
+            navigate(-1);
+        }
+    };
 
     return (
         <div className="h-14 relative flex items-center px-5 bg-white border-b border-gray-200 mb-3">
@@ -18,7 +27,7 @@ export default function Header({
                 </div>
             ) : (
                 // 나머지 페이지 헤더
-                <div onClick={() => navigate(-1)} className="cursor-pointer">
+                <div onClick={handleBack} className="cursor-pointer">
                     <IoIosArrowBack className="w-6 h-6 text-main" />
                 </div>
             )}

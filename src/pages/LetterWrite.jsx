@@ -59,7 +59,7 @@ export default function LetterWrite() {
 
     return (
         <Layout>
-            <Header type="default" title="새 편지 쓰기" />
+            <Header type="default" title="새 편지 쓰기" backTo="/list" />
             <LetterForm
                 title={title}
                 content={content}

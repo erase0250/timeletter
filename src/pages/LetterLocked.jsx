@@ -93,7 +93,7 @@ export default function LetterLocked() {
 
     return (
         <Layout>
-            <Header type="default" title="편지 잠금" />
+            <Header type="default" title="편지 잠금" backTo="/list" />
 
             {/* 내용 */}
             <div className="flex flex-col items-center justify-center text-center mt-50 gap-5">

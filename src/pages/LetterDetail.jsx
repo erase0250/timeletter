@@ -91,7 +91,7 @@ export default function LetterDetail() {
     if (!letter) {
         return (
             <Layout>
-                <Header type="default" title="편지 상세" />
+                <Header type="default" title="편지 상세" backTo="/list" />
                 <div className="p-6 text-center text-gray-500">
                     편지를 찾을 수 없습니다.
                 </div>
@@ -101,7 +101,7 @@ export default function LetterDetail() {
 
     return (
         <Layout>
-            <Header type="default" title="편지 상세" />
+            <Header type="default" title="편지 상세" backTo="/list" />
 
             {/* 편지 본문 */}
             <div className="flex-1 px-6 pt-3 pb-6">

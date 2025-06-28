@@ -1,4 +1,6 @@
 import { Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import "./App.css";
 import Home from "./pages/Home";
 import LetterWrite from "./pages/LetterWrite";
 import LetterList from "./pages/LetterList";
@@ -6,9 +8,8 @@ import LetterLocked from "./pages/LetterLocked";
 import LetterDetail from "./pages/LetterDetail";
 import LetterEdit from "./pages/LetterEdit";
 import LetterSendAnimation from "./components/LetterSendAnimation";
-import "./App.css";
-import { useEffect } from "react";
 import useUserStore from "./stores/userStore";
+import NotFound from "./pages/NotFound";
 
 function App() {
     useEffect(() => {
@@ -29,6 +30,7 @@ function App() {
                     <Route path="/locked/:id" element={<LetterLocked />} />
                     <Route path="/edit/:id" element={<LetterEdit />} />
                     <Route path="/send" element={<LetterSendAnimation />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </div>
         </div>

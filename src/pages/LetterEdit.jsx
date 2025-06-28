@@ -115,7 +115,7 @@ export default function LetterEdit() {
 
     return (
         <Layout>
-            <Header type="default" title="편지 수정하기" />
+            <Header type="default" title="편지 수정하기" backTo="/list" />
             <LetterForm
                 title={title}
                 content={content}
