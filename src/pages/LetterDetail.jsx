@@ -41,7 +41,7 @@ export default function LetterDetail() {
 
         try {
             const canvas = await html2canvas(letterRef.current, {
-                scale: 2,
+                scale: 3,
                 useCORS: true,
             });
             const dataUrl = canvas.toDataURL("image/png");
@@ -129,15 +129,20 @@ export default function LetterDetail() {
             <Header type="default" title="편지 상세" backTo="/list" />
 
             {/* 편지 본문 */}
-            <div className="flex-1 px-3 pb-4">
-                <div ref={letterRef} className="p-3">
+            <div className="flex items-center justify-center py-4">
+                <div
+                    ref={letterRef}
+                    style={{
+                        width: "360px",
+                    }}
+                >
                     <div
                         style={{
                             border: "1px solid #eee5da",
-                            borderRadius: "6px",
+                            borderRadius: "10px",
                             boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                            padding: "16px",
-                            backgroundColor: "#fdfaf7",
+                            padding: "14px",
+                            backgroundColor: "#fff",
                         }}
                     >
                         <h1
@@ -175,7 +180,7 @@ export default function LetterDetail() {
                 </div>
             </div>
 
-            <div className="flex gap-1 justify-end px-6 pb-6">
+            <div className="flex gap-1 justify-end px-8">
                 {/* 저장 버튼 */}
                 <button
                     className="flex items-center justify-center w-8 h-8 rounded-sm border border-[#a58a6a] text-[#a58a6a] hover:bg-[#a58a6a]/10 transition"
