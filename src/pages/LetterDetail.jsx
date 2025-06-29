@@ -41,7 +41,7 @@ export default function LetterDetail() {
 
         try {
             const canvas = await html2canvas(letterRef.current, {
-                scale: 4,
+                scale: 2,
                 useCORS: true,
             });
             const dataUrl = canvas.toDataURL("image/png");
