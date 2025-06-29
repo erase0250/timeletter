@@ -18,15 +18,42 @@ export default function LetterList() {
 
     useEffect(() => {
         const fetchLetters = async () => {
+            let updatedLetters = [];
+
             if (user) {
                 const firestoreLetters = await getLettersFromFirestore(
                     user.uid
                 );
-                setLetters(firestoreLetters);
+                updatedLetters = firestoreLetters.map((letter) => {
+                    const today = new Date();
+                    const openDate = new Date(letter.openAt);
+                    today.setHours(0, 0, 0, 0);
+                    openDate.setHours(0, 0, 0, 0);
+
+                    if (openDate <= today && letter.isLock) {
+                        return { ...letter, isLock: false };
+                    }
+                    return letter;
+                });
+                setLetters(updatedLetters);
             } else {
                 const stored =
                     JSON.parse(localStorage.getItem("letters")) || [];
-                setLetters(stored);
+                updatedLetters = stored.map((letter) => {
+                    const today = new Date();
+                    const openDate = new Date(letter.openAt);
+                    today.setHours(0, 0, 0, 0);
+                    openDate.setHours(0, 0, 0, 0);
+
+                    if (openDate <= today && letter.isLock) {
+                        return { ...letter, isLock: false };
+                    }
+                    return letter;
+                });
+
+                // 로컬스토리지도 같이 업데이트
+                localStorage.setItem("letters", JSON.stringify(updatedLetters));
+                setLetters(updatedLetters);
             }
         };
 
