@@ -10,6 +10,7 @@ import LetterEdit from "./pages/LetterEdit";
 import LetterSendAnimation from "./components/LetterSendAnimation";
 import useUserStore from "./stores/userStore";
 import NotFound from "./pages/NotFound";
+import About from "./pages/About";
 
 function App() {
     useEffect(() => {
@@ -30,6 +31,7 @@ function App() {
                     <Route path="/locked/:id" element={<LetterLocked />} />
                     <Route path="/edit/:id" element={<LetterEdit />} />
                     <Route path="/send" element={<LetterSendAnimation />} />
+                    <Route path="/about" element={<About />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </div>
