@@ -44,12 +44,12 @@ export default function Sidebar({ onClose }) {
                     <li
                         className="flex items-center gap-2 cursor-pointer hover:text-main"
                         onClick={() => {
-                            // navigate("/about");
+                            navigate("/about");
                             onClose();
                         }}
                     >
                         <FaInfoCircle className="w-4 h-4" />
-                        Timeletter 소개 (⚠️)
+                        Timeletter 소개
                     </li>
                     <li>
                         <a
@@ -68,7 +68,7 @@ export default function Sidebar({ onClose }) {
                             className="flex items-center gap-2 hover:text-main"
                         >
                             <FaGithub className="w-4 h-4" />
-                            GitHub / v1.0.0
+                            Github / v1.0.0
                         </a>
                     </li>
                 </ul>
