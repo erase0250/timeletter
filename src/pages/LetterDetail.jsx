@@ -1,14 +1,16 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
-import { useEffect, useState } from "react";
-import { MdEdit } from "react-icons/md";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { useEffect, useRef, useState } from "react";
+import { FiDownload } from "react-icons/fi";
+import { RiEdit2Fill } from "react-icons/ri";
+import { AiFillDelete } from "react-icons/ai";
 import useUserStore from "../stores/userStore";
 import useLetterStore from "../stores/letterStore";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import { getLettersFromFirestore } from "../api/firestore";
+import html2canvas from "html2canvas";
 
 // ❓ 날짜 포맷 안전하게 처리하는 함수
 function safeFormatDate(value) {
@@ -31,6 +33,29 @@ export default function LetterDetail() {
     const navigate = useNavigate();
     const { user } = useUserStore();
     const { letters, setLetters } = useLetterStore();
+    const letterRef = useRef(null);
+
+    // 이미지 저장 핸들러
+    const handleSaveImage = async () => {
+        if (!letterRef.current) return;
+
+        try {
+            const canvas = await html2canvas(letterRef.current, {
+                scale: 4,
+                useCORS: true,
+            });
+            const dataUrl = canvas.toDataURL("image/png");
+
+            const link = document.createElement("a");
+            link.href = dataUrl;
+            link.download = `${letter.title || "letter"}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error("이미지 저장 실패:", error);
+        }
+    };
 
     // 편지 삭제 핸들러
     const handleDelete = async () => {
@@ -104,52 +129,78 @@ export default function LetterDetail() {
             <Header type="default" title="편지 상세" backTo="/list" />
 
             {/* 편지 본문 */}
-            <div className="flex-1 px-6 pt-3 pb-6">
-                <div className="rounded-md shadow-sm border border-[#eee5da] p-4 bg-white">
-                    {/* 제목 */}
-                    <h1 className="text-main text-xl font-bold mb-4">
-                        {letter.title}
-                    </h1>
-
-                    {/* 내용 + 배경 밑줄 */}
+            <div className="flex-1 px-3 pb-4">
+                <div ref={letterRef} className="p-3">
                     <div
-                        className="text-[14px] text-gray-700 leading-[22px] whitespace-pre-wrap rounded-md px-1 pb-5"
                         style={{
-                            backgroundImage: `repeating-linear-gradient(
-                                to bottom,
-                                transparent 0px,
-                                transparent 21px,
-                                rgba(0, 0, 0, 0.2) 22px
-                            )`,
-                            backgroundPosition: "0 22px", // 밑줄 위치
-                            backgroundSize: "100% 22px",
+                            border: "1px solid #eee5da",
+                            borderRadius: "6px",
+                            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                            padding: "16px",
+                            backgroundColor: "#fdfaf7",
                         }}
                     >
-                        {letter.content}
+                        <h1
+                            style={{
+                                color: "#4e3f34",
+                                fontSize: "22px",
+                                fontWeight: "bold",
+                                marginBottom: "16px",
+                            }}
+                        >
+                            {letter.title}
+                        </h1>
+                        <div
+                            style={{
+                                fontSize: "14px",
+                                color: "#374151",
+                                lineHeight: "22px",
+                                borderRadius: "4px",
+                                padding: "4px",
+                            }}
+                        >
+                            {letter.content}
+                        </div>
+                        <p
+                            style={{
+                                fontSize: "12px",
+                                color: "#9CA3AF",
+                                textAlign: "right",
+                                marginTop: "8px",
+                            }}
+                        >
+                            {safeFormatDate(letter.createdAt)} 작성
+                        </p>
                     </div>
-
-                    {/* 작성일 */}
-                    <p className="text-xs text-gray-400 text-right mt-2">
-                        {safeFormatDate(letter.createdAt)} 작성
-                    </p>
                 </div>
             </div>
 
-            {/* 수정/삭제 버튼 */}
-            <div className="flex gap-2 justify-end px-6 pb-6">
+            <div className="flex gap-1 justify-end px-6 pb-6">
+                {/* 저장 버튼 */}
                 <button
-                    className="flex items-center gap-1 px-3 py-1 rounded-full border border-main text-main text-xs hover:bg-main hover:text-white transition"
-                    onClick={() => navigate(`/edit/${id}`)}
+                    className="flex items-center justify-center w-8 h-8 rounded-sm border border-[#a58a6a] text-[#a58a6a] hover:bg-[#a58a6a]/10 transition"
+                    onClick={handleSaveImage}
+                    title="이미지 저장"
                 >
-                    <MdEdit className="w-3 h-3" />
-                    수정
+                    <FiDownload className="w-4 h-4" />
                 </button>
+
+                {/* 수정 버튼 */}
                 <button
-                    className="flex items-center gap-1 px-3 py-1 rounded-full bg-main text-white text-xs hover:brightness-120 transition"
-                    onClick={handleDelete}
+                    className="flex items-center justify-center w-8 h-8 rounded-sm border border-[#a58a6a] text-[#a58a6a] hover:bg-[#a58a6a]/10 transition"
+                    onClick={() => navigate(`/edit/${id}`)}
+                    title="수정"
                 >
-                    <RiDeleteBinLine className="w-3 h-3" />
-                    삭제
+                    <RiEdit2Fill className="w-4 h-4" />
+                </button>
+
+                {/* 삭제 버튼 */}
+                <button
+                    className="flex items-center justify-center w-8 h-8 rounded-sm border border-[#a58a6a] text-[#a58a6a] hover:bg-[#a58a6a]/10 transition"
+                    onClick={handleDelete}
+                    title="삭제"
+                >
+                    <AiFillDelete className="w-4 h-4" />
                 </button>
             </div>
         </Layout>
