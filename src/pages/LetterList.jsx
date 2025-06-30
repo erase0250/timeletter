@@ -88,7 +88,11 @@ export default function LetterList() {
                 <span className="font-semibold text-main">
                     {filteredLetters.length}
                 </span>
-                개의 편지를 작성했어요.
+                {activeTab === "전체"
+                    ? "개의 편지를 작성했어요."
+                    : activeTab === "열람가능"
+                    ? "개의 편지를 볼 수 있어요."
+                    : "개의 편지가 잠겨 있어요."}
             </p>
 
             {/* 편지 카드 리스트 */}
