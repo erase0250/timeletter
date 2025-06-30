@@ -37,10 +37,6 @@ export default function Sidebar({ onClose }) {
 
                 {/* 메뉴 리스트 */}
                 <ul className="flex flex-col gap-4 text-sm  text-main">
-                    <li className="flex items-center gap-2 cursor-pointer hover:text-main">
-                        <FaSun className="w-4 h-4" />
-                        테마 설정 (⚠️)
-                    </li>
                     <li
                         className="flex items-center gap-2 cursor-pointer hover:text-main"
                         onClick={() => {
