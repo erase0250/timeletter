@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import "./App.css";
@@ -34,6 +35,7 @@ function App() {
                     <Route path="/about" element={<About />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
+                <Analytics />
             </div>
         </div>
     );
