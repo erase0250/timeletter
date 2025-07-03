@@ -1,6 +1,6 @@
 # Timeletter
 
-✉️ Timeletter(타임레터)는 지금 이 순간의 마음을 담아 미래의 나에게 따뜻한 편지를 전하는 서비스입니다.
+- Timeletter(타임레터)는 지금 이 순간의 마음을 담아 미래의 나에게 따뜻한 편지를 전하는 서비스입니다.
 
 <br>
 
@@ -47,3 +47,36 @@ npm install
 # 로컬 서버 실행
 npm run dev
 ```
+
+<br>
+
+## 📁 폴더 구조
+```
+.
+├── public/                   # 정적 파일 폴더
+│   ├── favicon/              # 파비콘 관련 리소스
+│   └── icons/                # 앱 내 사용되는 아이콘 리소스
+│
+├── src/                      # 소스 코드 루트
+│   ├── App.jsx               # 최상위 App 컴포넌트
+│   ├── App.css               # 전역 스타일
+│   ├── index.css             # 웹 폰트 설정, 테마 변수 정의 (Tailwind 기반)
+│   ├── main.jsx              # 앱 진입점
+│   │
+│   ├── api/                  # API 호출 함수 정의
+│   ├── components/           # UI 컴포넌트
+│   ├── hooks/                # 커스텀 훅 정의
+│   ├── lib/                  # firebase 외부 라이브러리 설정
+│   ├── pages/                # 라우팅되는 페이지 컴포넌트
+│   └── stores/               # Zustand 전역 상태 관리
+│
+├── index.html                # 앱 진입용 HTML 파일
+├── package.json              # 프로젝트 설정 및 의존성 관리
+├── package-lock.json         # 의존성 버전 고정 파일
+├── eslint.config.js          # ESLint 설정
+├── vercel.json               # Vercel 배포 설정
+├── vite.config.js            # Vite 번들러 설정
+├── README.md                 # 프로젝트 소개 문서
+
+```
+
